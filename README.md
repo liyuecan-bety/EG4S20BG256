@@ -49,16 +49,16 @@ es8388_EG4S20/
 
 ```mermaid
 flowchart LR
-    MIC[麦克风] -->|模拟信号| ADC[ES8388 ADC]
-    ADC -->|ADCDAT / I2S| RX[audio_receive<br/>I2S 接收]
-    RX -->|adc_data 24bit| LOOP[直通回环<br/>dac_data = adc_data]
-    LOOP -->|dac_data 24bit| TX[audio_send<br/>I2S 发送]
-    TX -->|DACDAT / I2S| DAC[ES8388 DAC]
-    DAC -->|模拟信号| HP[耳机]
+    MIC["麦克风"] -->|模拟信号| ADC["ES8388 ADC"]
+    ADC -->|"ADCDAT · I2S"| RX["audio_receive<br/>I2S 接收"]
+    RX -->|"adc_data 24 bit"| LOOP["直通回环<br/>dac_data = adc_data"]
+    LOOP -->|"dac_data 24 bit"| TX["audio_send<br/>I2S 发送"]
+    TX -->|"DACDAT · I2S"| DAC["ES8388 DAC"]
+    DAC -->|模拟信号| HP["耳机"]
 
-    PLL[clk_wiz_0<br/>PLL 50M→12.288M] -->|MCLK| ES[ES8388]
-    CFG[es8388_config<br/>+ i2c_reg_cfg<br/>+ i2c_dri] -->|SCL/SDA| ES
-    SW[volume[1:0]<br/>拨码开关] --> CFG
+    PLL["clk_wiz_0<br/>PLL 50M → 12.288M"] -->|MCLK| ES["ES8388"]
+    CFG["es8388_config<br/>i2c_reg_cfg<br/>i2c_dri"] -->|"SCL/SDA"| ES
+    SW["volume[1:0]<br/>拨码开关"] -->|音量档位| CFG
 ```
 
 **数据通路**：`audio_receive` 在 `BCLK` 时钟域下从 ES8388 的 `ADCDAT` 采集 24-bit I2S 数据，得到 `adc_data`；顶层将 `adc_data` 直接接到 `audio_send` 的 `dac_data`，由 `audio_send` 按同样的 I2S 时序从 `DACDAT` 送回 ES8388，实现零延迟回环。
@@ -182,3 +182,7 @@ stateDiagram-v2
 - `ES8388 Module/硬件连接说明.docx` — 硬件插接方式
 - `EG4S20BG256核心板 - 2023.pdf` — 开发板原理图
 - `EG4S20数据手册/` — 安路 EG4S20 系列资料（PLL、IO、块 RAM 等）
+
+## 📄 许可证
+
+本项目仅用于学习与交流，RTL 源码可自由参考；`pll_clk.v` 为工具自动生成的封装文件，请遵循对应 EDA 工具与 IP 的授权条款。
